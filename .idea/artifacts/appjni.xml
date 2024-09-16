@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="appjni">
+    <output-path>$PROJECT_DIR$/out/artifacts/appjni</output-path>
+    <root id="archive" name="appjni.jar">
+      <element id="module-output" name="jni" />
+    </root>
+  </artifact>
+</component>

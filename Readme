@@ -1,0 +1,205 @@
+как самому реализовать функцию JAVA JNI по аналогии с jdbc-sqlite библиотекой java, то есть, чтобы после запроса возвращался ResultSet
+Sources
+anylogic.help favicon
+study.sfu favicon
+vk.com favicon
+asaskevich.github.io favicon
+java-online.ru favicon
+View 5 more
+Answer
+Чтобы реализовать функцию JNI, которая будет работать аналогично библиотеке JDBC для SQLite и возвращать ResultSet, необходимо создать структуру, которая будет обрабатывать SQL-запросы на стороне C/C++ и возвращать данные в формате, который Java может интерпретировать как ResultSet. Вот пошаговое руководство по созданию такой функции.
+Шаг 1: Определение Java-класса
+Создайте класс, который будет содержать нативные методы для работы с базой данных:
+
+java
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SQLiteDatabase {
+    static {
+        System.loadLibrary("SQLiteNative"); // Загрузка нативной библиотеки
+    }
+
+    public native List<List<Object>> executeQuery(String query);
+
+    // Метод для преобразования результата в ResultSet
+    public ResultSet getResultSet(String query) throws SQLException {
+        List<List<Object>> data = executeQuery(query);
+        return new CustomResultSet(data);
+    }
+}
+
+Шаг 2: Реализация нативного метода
+Создайте файл SQLiteNative.cpp и реализуйте метод executeQuery:
+
+cpp
+#include <jni.h>
+#include <sqlite3.h>
+#include <vector>
+#include <string>
+#include "SQLiteDatabase.h"
+
+extern "C" {
+
+JNIEXPORT jobjectArray JNICALL Java_SQLiteDatabase_executeQuery(JNIEnv *env, jobject obj, jstring query) {
+    const char *nativeQuery = env->GetStringUTFChars(query, 0);
+
+    sqlite3 *db;
+    sqlite3_open("your_database.db", &db); // Открытие базы данных
+
+    sqlite3_stmt *stmt;
+    sqlite3_prepare_v2(db, nativeQuery, -1, &stmt, nullptr);
+
+    std::vector<std::vector<std::string>> results;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        std::vector<std::string> row;
+        int columnCount = sqlite3_column_count(stmt);
+
+        for (int i = 0; i < columnCount; i++) {
+            const char *text = (const char *)sqlite3_column_text(stmt, i);
+            row.push_back(text ? text : "NULL");
+        }
+
+        results.push_back(row);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    // Создаем массив объектов для возврата
+    jclass listClass = env->FindClass("java/util/ArrayList");
+    jmethodID listConstructor = env->GetMethodID(listClass, "<init>", "()V");
+
+    jobjectArray resultArray = env->NewObjectArray(results.size(), listClass, nullptr);
+
+    for (size_t i = 0; i < results.size(); ++i) {
+        jobject listObject = env->NewObject(listClass, listConstructor);
+
+        for (const auto& value : results[i]) {
+            jstring jValue = env->NewStringUTF(value.c_str());
+            jmethodID addMethod = env->GetMethodID(listClass, "add", "(Ljava/lang/Object;)Z");
+            env->CallBooleanMethod(listObject, addMethod, jValue);
+            env->DeleteLocalRef(jValue); // Освобождаем локальную ссылку
+        }
+
+        env->SetObjectArrayElement(resultArray, i, listObject);
+        env->DeleteLocalRef(listObject); // Освобождаем локальную ссылку
+    }
+
+    env->ReleaseStringUTFChars(query, nativeQuery);
+
+    return resultArray; // Возвращаем массив списков
+}
+
+}
+
+Шаг 3: Создание класса CustomResultSet
+Для преобразования результата в ResultSet, создайте класс CustomResultSet, который будет реализовывать интерфейс ResultSet:
+
+java
+import java.sql.*;
+import java.util.List;
+
+public class CustomResultSet implements ResultSet {
+    private final List<List<Object>> data;
+    private int currentRow;
+
+    public CustomResultSet(List<List<Object>> data) {
+        this.data = data;
+        this.currentRow = -1; // Начинаем перед первой строкой
+    }
+
+    @Override
+    public boolean next() throws SQLException {
+        currentRow++;
+        return currentRow < data.size();
+    }
+
+    @Override
+    public Object getObject(int columnIndex) throws SQLException {
+        return data.get(currentRow).get(columnIndex - 1); // Индексы в ResultSet начинаются с 1
+    }
+
+    // Реализуйте остальные методы интерфейса ResultSet по мере необходимости...
+}
+
+Шаг 4: Использование в Java
+Теперь вы можете использовать ваш класс для выполнения запросов и получения результатов:
+
+java
+public class Main {
+    public static void main(String[] args) {
+        SQLiteDatabase db = new SQLiteDatabase();
+
+        try {
+            ResultSet rs = db.getResultSet("SELECT * FROM your_table");
+            while (rs.next()) {
+                System.out.println(rs.getObject(1)); // Пример получения первого столбца
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Заключение
+Этот пример демонстрирует создание функции JNI для выполнения SQL-запросов к базе данных SQLite и возврата результатов в виде списка объектов. Затем эти объекты могут быть использованы для создания кастомного ResultSet, что позволяет работать с результатами запросов аналогично стандартному JDBC.
+А как устроен механизм ResultSet
+rs.getInt
+rs.getString
+rs.getBoolean
+Sources
+docs.oracle.com favicon
+java-online.ru favicon
+metanit.com favicon
+outofrange.ru favicon
+study.sfu favicon
+View 5 more
+Answer
+Механизм работы методов getInt, getString, getBoolean в ResultSet
+ResultSet — это интерфейс в Java, который предоставляет методы для извлечения данных из результата SQL-запроса. Он позволяет построчно проходить по результатам и получать значения столбцов. Рассмотрим подробнее, как работают методы getInt, getString и getBoolean.
+Основные методы
+
+    getInt(int columnIndex) и getInt(String columnLabel):
+        Эти методы возвращают значение целочисленного типа из указанного столбца текущей строки.
+        Индекс столбца начинается с 1 (т.е. первый столбец имеет индекс 1).
+        Если значение в базе данных равно NULL, метод вернет 0.
+    getString(int columnIndex) и getString(String columnLabel):
+        Эти методы возвращают значение типа String из указанного столбца.
+        Если значение в базе данных равно NULL, метод вернет null.
+    getBoolean(int columnIndex) и getBoolean(String columnLabel):
+        Эти методы возвращают значение логического типа из указанного столбца.
+        Если значение в базе данных равно NULL, метод вернет false.
+        Важно отметить, что если в базе данных хранится целочисленное значение (например, 0 или 1), то оно будет интерпретировано как false и true соответственно.
+
+Пример использования
+Рассмотрим пример, где выполняется SQL-запрос и обрабатываются результаты:
+
+java
+Statement stmt = connection.createStatement();
+ResultSet rs = stmt.executeQuery("SELECT fldmemberid, fldfirstname, fldplayersalary FROM tblmember");
+
+while (rs.next()) {
+    int id = rs.getInt("fldmemberid"); // Получаем ID
+    String firstName = rs.getString("fldfirstname"); // Получаем имя
+    boolean isPlayerSalary = rs.getBoolean("fldplayersalary"); // Получаем зарплату как boolean
+
+    System.out.println("ID: " + id + ", Name: " + firstName + ", Salary Exists: " + isPlayerSalary);
+}
+
+Важные моменты
+
+    Проверка на NULL: Для проверки на наличие значения в столбце можно использовать метод wasNull(), который возвращает true, если последний вызванный метод получения значения вернул NULL.
+    Типы данных: При использовании методов получения значений важно знать, какие типы данных хранятся в базе данных. Например, если вы пытаетесь получить логическое значение из целочисленного поля, это может привести к неожиданным результатам.
+    Индексы и имена колонок: Методы получения значений могут использовать как индексы колонок, так и их имена. Однако имена колонок нечувствительны к регистру.
+
+Заключение
+Механизм работы методов getInt, getString и getBoolean в интерфейсе ResultSet позволяет удобно извлекать данные из результатов SQL-запросов. Понимание того, как эти методы работают с различными типами данных, поможет избежать ошибок при работе с базами данных.
+Related
+Почему getBoolean не возвращает true, если значение есть в поле
+Какие типы данных поддерживаются методами ResultSet
+Какие ошибки могут возникать при использовании методов ResultSet
+Как проверить тип данных в ResultSet
+Какие альтернативы методам ResultSet существуют

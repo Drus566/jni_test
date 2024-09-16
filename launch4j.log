@@ -1,0 +1,121 @@
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+JRE paths:	bin\jre
+Check launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+JRE paths:	bin\jre
+Check launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+Substitute:	JAVA_HOME = C:\Program Files (x86)\Java\jdk1.8.0_211
+JRE paths:	C:\Program Files (x86)\Java\jdk1.8.0_211
+Check launcher:	C:\Program Files (x86)\Java\jdk1.8.0_211\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Program Files (x86)\Java\jdk1.8.0_211\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+JRE paths:	bin\jre
+Check launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+JRE paths:	bin\jre
+Check launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
+
+
+Version:	3.50
+CmdLine:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+JRE paths:	bin\jre
+Check launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe (OK)
+Version string: 1.008.000_211 / 32-Bit (OK)
+Main class:	howdo1.NativeCallsClass
+Add classpath:	appjni.jar
+Launcher:	C:\Users\LykovA\Desktop\Workplace\Projects\jni\bin\jre\bin\javaw.exe
+Launcher args:	-classpath "C:\Users\LykovA\Desktop\Workplace\Projects\jni\jni.exe;appjni.jar" howdo1.NativeCallsClass
+Args length:	102/32768 chars
+Exit code:	0
