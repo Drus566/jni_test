@@ -37,12 +37,12 @@ public class Application {
             System.out.println(str + " " + i + " " + b);
         }
 
-        Response resp = (Response) bridge.test();
+        Response resp = bridge.test();
         while (resp.next()) {
             String str = resp.getString(1);
             Integer i = resp.getInteger(2);
             Boolean b = resp.getBoolean(3);
-//            System.out.println(str + " " + i + " " + b);
+            System.out.println(str + " " + i + " " + b);
 //            System.out.println("GG");
         }
 
