@@ -1,13 +1,15 @@
 package ver1;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import howdo1.NativeCallsClass;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class Application {
-    static { System.loadLibrary("ver1_bridge32"); }
+    static { System.loadLibrary("ver2_bridge32"); }
 
     public static void info() {
         System.out.println("Версия Java: " + System.getProperty("java.version"));
@@ -20,11 +22,30 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        info();
         Bridge bridge = new Bridge();
-        bridge.setObjectValue(new User("Вася",13,true), 3);
+        info();
+        User u = new User("Вася",13,true);
+        bridge.setObjectValue(u, 3);
         User new_user = bridge.createObject("Иван", 12, true);
         new_user.info();
+        List<List<Object>> lists = bridge.testObj();
+        for (List<Object> l : lists) {
+            String str = (String)l.get(0);
+            Integer i = (Integer)l.get(1);
+            Boolean b = (Boolean)l.get(2);
+
+            System.out.println(str + " " + i + " " + b);
+        }
+
+        Response resp = (Response) bridge.test();
+        while (resp.next()) {
+            String str = resp.getString(1);
+            Integer i = resp.getInteger(2);
+            Boolean b = resp.getBoolean(3);
+//            System.out.println(str + " " + i + " " + b);
+//            System.out.println("GG");
+        }
+
 
 //        NativeCallsClass nc = new NativeCallsClass();
 //        nc.printOne(); // Invoke native method

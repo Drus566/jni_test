@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;IZ)Lver1/User;
  */
 JNIEXPORT jobject JNICALL Java_ver1_Bridge_createObject
-  (JNIEnv *, jclass, jstring, jint, jboolean);
+  (JNIEnv *, jobject, jstring, jint, jboolean);
 
 /*
  * Class:     ver1_Bridge
@@ -21,7 +21,7 @@ JNIEXPORT jobject JNICALL Java_ver1_Bridge_createObject
  * Signature: (Lver1/User;)I
  */
 JNIEXPORT jint JNICALL Java_ver1_Bridge_getObjectValue
-  (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     ver1_Bridge
@@ -29,7 +29,23 @@ JNIEXPORT jint JNICALL Java_ver1_Bridge_getObjectValue
  * Signature: (Lver1/User;I)V
  */
 JNIEXPORT void JNICALL Java_ver1_Bridge_setObjectValue
-  (JNIEnv *, jclass, jobject, jint);
+  (JNIEnv *, jobject, jobject, jint);
+
+/*
+ * Class:     ver1_Bridge
+ * Method:    testObj
+ * Signature: ()Ljava/util/List;
+ */
+JNIEXPORT jobject JNICALL Java_ver1_Bridge_testObj
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     ver1_Bridge
+ * Method:    test
+ * Signature: ()Ljava/util/List;
+ */
+JNIEXPORT jobject JNICALL Java_ver1_Bridge_test
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }

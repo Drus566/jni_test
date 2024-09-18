@@ -7,13 +7,13 @@ public class User {
         System.out.println("Is man: " + is_man);
     }
 
-    User(String name, Integer age, Boolean is_man) {
+    User(String name, int age, boolean is_man) {
         this.name = name;
         this.age = age;
         this.is_man = is_man;
     }
 
     String name;
-    Integer age;
-    Boolean is_man;
+    int age;
+    boolean is_man;
 }
