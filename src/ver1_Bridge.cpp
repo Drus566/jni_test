@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "ver1_Bridge.h"
+#include "sqlite3.h"
 
 
 //JNIEXPORT jobject JNICALL Java_ver1_Bridge_createObject
@@ -85,6 +86,26 @@ JNIEXPORT void JNICALL Java_ver1_Bridge_setObjectValue
 }
 
 JNIEXPORT jobject JNICALL Java_ver1_Bridge_test(JNIEnv *env, jobject obj) {
+    sqlite3 *db;
+    char *errMsg = nullptr;
+    int rc;
+
+    rc = sqlite3_open("example228.db", &db);
+    if (rc) std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+    const char *sqlCreateTable = "CREATE TABLE IF NOT EXISTS PERSON("
+                                 "ID INT PRIMARY KEY NOT NULL, "
+                                 "NAME TEXT NOT NULL);";
+    rc = sqlite3_exec(db, sqlCreateTable, nullptr, 0, &errMsg);
+
+    if (rc != SQLITE_OK) {
+        std::cerr << "SQL error: " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    } else {
+        std::cout << "Table created successfully" << std::endl;
+    }
+
+    sqlite3_close(db);
+                                
     jclass response_class = env->FindClass("ver1/Response");
     // jmethodID response_class_constructors = env->GetMethodID(response_class, "<init>", "(Ljava/util/ArrayList;)V");
     jmethodID response_class_constructors = env->GetMethodID(response_class, "<init>", "(Ljava/util/List;)V");

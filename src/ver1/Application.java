@@ -9,7 +9,18 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class Application {
-    static { System.loadLibrary("ver2_bridge32"); }
+    static {
+//        System.loadLibrary("icu32");
+//        System.loadLibrary("libnewicudt75");
+//        System.loadLibrary("libnewicuuc75");
+//        System.loadLibrary("libnewicuio75");
+//        System.loadLibrary("libnewicudt75");
+//
+//        System.loadLibrary("libnewicuin75");
+
+        System.loadLibrary("322");
+        System.loadLibrary("ver2_bridge32");
+    }
 
     public static void info() {
         System.out.println("Версия Java: " + System.getProperty("java.version"));
