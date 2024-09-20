@@ -35,35 +35,21 @@ public class Application {
     public static void main(String[] args) {
         Bridge bridge = new Bridge();
         info();
-        User u = new User("Вася",13,true);
-        bridge.setObjectValue(u, 3);
-        User new_user = bridge.createObject("Иван", 12, true);
-        new_user.info();
-        List<List<Object>> lists = bridge.testObj();
-        for (List<Object> l : lists) {
-            String str = (String)l.get(0);
-            Integer i = (Integer)l.get(1);
-            Boolean b = (Boolean)l.get(2);
+        String sql_query = "SELECT * FROM PERSON WHERE name LIKE '%и%';";
+        Response resp = bridge.search(sql_query);
+//        Response resp = bridge.test();
 
-            System.out.println(str + " " + i + " " + b);
-        }
+//        while (resp.next()) {
+//            Integer i = resp.getInteger(2);
+//            String str = resp.getString(1);
+//            System.out.println(i + ": " + str);
+//        }
 
-        Response resp = bridge.test();
         while (resp.next()) {
-            String str = resp.getString(1);
-            Integer i = resp.getInteger(2);
-            Boolean b = resp.getBoolean(3);
-            System.out.println(str + " " + i + " " + b);
-//            System.out.println("GG");
+            Integer i = resp.getInteger(1);
+            String str = resp.getString(2);
+            System.out.println(i + ": " + str);
         }
-
-
-//        NativeCallsClass nc = new NativeCallsClass();
-//        nc.printOne(); // Invoke native method
-//        nc.printTwo(); // Invoke native method
-//        NativeCallsClass.MyObject mobj = nc.createObject(2);
-//        int i = nc.getObjectValue(mobj);
-//        nc.setObjectValue(mobj, 3);
     }
 
     public static void showFrame() {

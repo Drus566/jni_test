@@ -42,10 +42,18 @@ JNIEXPORT jobject JNICALL Java_ver1_Bridge_testObj
 /*
  * Class:     ver1_Bridge
  * Method:    test
- * Signature: ()Ljava/util/List;
+ * Signature: ()Lver1/Response;
  */
 JNIEXPORT jobject JNICALL Java_ver1_Bridge_test
   (JNIEnv *, jobject);
+
+/*
+ * Class:     ver1_Bridge
+ * Method:    search
+ * Signature: (Ljava/lang/String;)Lver1/Response;
+ */
+JNIEXPORT jobject JNICALL Java_ver1_Bridge_search
+  (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

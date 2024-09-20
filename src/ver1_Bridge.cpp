@@ -220,3 +220,161 @@ JNIEXPORT jobject JNICALL Java_ver1_Bridge_testObj(JNIEnv *env, jobject obj)
 
     // return resultArray; // Возвращаем массив списков
 }
+
+JNIEXPORT jobject JNICALL Java_ver1_Bridge_search(JNIEnv *env, jobject obj, jstring query) {
+    std::string db_name = "example.db";
+
+    /*********** PREPARE JNI *********/
+    std::string path_response_class = "ver1/Response";
+
+    // Response
+
+    jclass response_class = env->FindClass("ver1/Response");
+    // if (response_class == nullptr) {
+    //     std::cerr << "JNI: Failed to find class " << path_response_class << std::endl;
+    //     return NULL;
+    // }
+    jmethodID response_class__constructor = env->GetMethodID(response_class, "<init>", "(Ljava/util/List;)V");
+    // if (response_class__constructor == nullptr) {
+    //     std::cerr << "JNI: Failed to find constructor for '" << path_response_class << "'" << std::endl;
+    //     return NULL;
+    // }
+
+    // ArrayList
+    jclass array_list = env->FindClass("java/util/ArrayList");
+    if (array_list == nullptr) {
+        std::cerr << "JNI: Failed to find class 'java/util/ArrayList'" << std::endl;
+        return NULL;
+    }
+    jmethodID array_list__constructor = env->GetMethodID(array_list, "<init>", "()V");
+    if (array_list__constructor == nullptr)
+    {
+        std::cerr << "JNI: Failed to find constructor for 'java/util/ArrayList'" << std::endl;
+        return NULL;
+    }
+    jmethodID array_list__add = env->GetMethodID(array_list, "add", "(Ljava/lang/Object;)Z");
+    if (array_list__add == nullptr) {
+        std::cerr << "JNI: Failed to find method 'add' for 'java/util/ArrayList'" << std::endl;
+        return NULL;
+    }
+
+    // Integer
+    jclass int_class = env->FindClass("java/lang/Integer");
+    if (int_class == nullptr) {
+        std::cerr << "JNI: Failed to find class 'java/lang/Integer'" << std::endl;
+        return NULL;
+    }
+    jmethodID int_class__constructor = env->GetMethodID(int_class, "<init>", "(I)V");
+    if (int_class__constructor == nullptr) {
+        std::cerr << "JNI: Failed to find constructor for 'java/lang/Integer'" << std::endl;
+        return NULL;
+    }
+
+    // Float
+    jclass float_class = env->FindClass("java/lang/Float");
+    if (float_class == nullptr) {
+        std::cerr << "JNI: Failed to find class 'java/lang/Float'" << std::endl;
+        return NULL;
+    }
+    jmethodID float_class__constructor = env->GetMethodID(float_class, "<init>", "(Z)V");
+    if (float_class__constructor == nullptr) {
+        std::cerr << "JNI: Failed to find constructor for 'java/lang/Float'" << std::endl;
+        return NULL;
+    }
+
+    // /*********** PREPARE SQLITE3 *********/
+
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    
+    const std::string sql_query = env->GetStringUTFChars(query, NULL);
+
+    // Open the database
+    if (sqlite3_open(db_name.c_str(), &db) != SQLITE_OK) {
+        std::cerr << "JNI: Error opening database: " << sqlite3_errmsg(db) << std::endl;
+        return NULL;
+    }
+
+    // Prepare the SQL statement
+    if (sqlite3_prepare_v2(db, sql_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "JNI: Error preparing statement: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    int column_count = sqlite3_column_count(stmt);
+    int type = 0;
+
+    jobject outer_list = env->NewObject(array_list, array_list__constructor);
+    if (outer_list == nullptr) {
+        std::cerr << "JNI: Failed create new object for 'java/util/ArrayList'" << std::endl;
+        return NULL;
+    }
+
+    // Execute the SQL statement and fetch results
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        for (int col = 0; col < column_count; col++) {
+            jobject inner_list = env->NewObject(array_list, array_list__constructor);
+            if (inner_list == nullptr) {
+                std::cerr << "JNI: Failed create new object for 'java/util/ArrayList'" << std::endl;
+                return NULL;
+            }
+
+            type = sqlite3_column_type(stmt, col);
+            switch (type) {
+                case SQLITE_INTEGER: {
+                    jobject j_int = env->NewObject(int_class, int_class__constructor, sqlite3_column_int(stmt, col));
+                    if (j_int == nullptr)
+                    {
+                        /*** ATTENTION: boolean in sqlite3 saved like integers ***/
+                        std::cerr << "JNI: Failed create new j_int object" << std::endl;
+                        return NULL;
+                    }
+                    env->CallBooleanMethod(inner_list, array_list__add, j_int);
+                    env->DeleteLocalRef(j_int);
+                }
+                break;
+
+                case SQLITE_TEXT: {
+
+                    const char *str = reinterpret_cast<const char *>(sqlite3_column_text(stmt, col));
+                    jstring j_string = env->NewStringUTF(str);
+                    if (j_string == nullptr) {
+                        std::cerr << "JNI: Failed create new j_string" << std::endl;
+                        return NULL;
+                    }
+                    env->CallBooleanMethod(inner_list, array_list__add, j_string);
+                    env->DeleteLocalRef(j_string);
+                }
+                break;
+
+                case SQLITE_FLOAT: {
+                    jobject j_float = env->NewObject(float_class, float_class__constructor, sqlite3_column_double(stmt, col));
+                    if (j_float == nullptr) {
+                        std::cerr << "JNI: Failed create new j_float" << std::endl;
+                        return NULL;
+                    }
+                    env->CallBooleanMethod(inner_list, array_list__add, j_float);
+                    env->DeleteLocalRef(j_float);
+                }
+                break;
+
+                default:
+                    break;
+            }
+
+            env->CallBooleanMethod(outer_list, array_list__add, inner_list);
+            env->DeleteLocalRef(inner_list);
+        }
+    }
+    sqlite3_close(db);
+
+    jobject response_object = env->NewObject(response_class, response_class__constructor, outer_list);
+    if (response_object == nullptr) {
+        std::cerr << "JNI: Failed create new object for " << path_response_class << std::endl;
+        return NULL;
+    }
+    env->DeleteLocalRef(outer_list);
+
+    return response_object;
+}

@@ -13,4 +13,7 @@ public class Bridge {
     public native void setObjectValue(User obj, int value);
     public native List<List<Object>> testObj();
     public native Response test();
+    public native Response search(String query);
+    public native void searchTest(String query);
+
 }
