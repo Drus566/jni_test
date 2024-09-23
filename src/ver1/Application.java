@@ -44,10 +44,11 @@ public class Application {
 //            String str = resp.getString(1);
 //            System.out.println(i + ": " + str);
 //        }
+        if (resp == null) return;
 
         while (resp.next()) {
-            Integer i = resp.getInteger(1);
             String str = resp.getString(2);
+            Integer i = resp.getInteger(1);
             System.out.println(i + ": " + str);
         }
     }
